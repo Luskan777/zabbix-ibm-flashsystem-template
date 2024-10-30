@@ -1,0 +1,457 @@
+{
+    "zabbix_export": {
+        "version": "6.4",
+        "template_groups": [
+            {
+                "uuid": "7df96b18c230490a9a0a9e2307226338",
+                "name": "Templates"
+            },
+            {
+                "uuid": "7c2cb727f85b492d88cd56e17127c64d",
+                "name": "Templates/SAN"
+            }
+        ],
+        "templates": [
+            {
+                "uuid": "e0231cd8ce8e4e83b1da37802600fe17",
+                "template": "IBM Storage FS V5000",
+                "name": "IBM Storage FS V5000",
+                "groups": [
+                    {
+                        "name": "Templates"
+                    },
+                    {
+                        "name": "Templates/SAN"
+                    }
+                ],
+                "items": [
+                    {
+                        "uuid": "51f1ea3e91b040f49e8f772b652db1f3",
+                        "name": "ICMP status",
+                        "type": "SIMPLE",
+                        "key": "icmpping[{$CABIP1},,,,50]",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "status"
+                            }
+                        ],
+                        "triggers": [
+                            {
+                                "uuid": "7a8ee69d98d3475c99afa5bc0ca026f9",
+                                "expression": "last(/IBM Storage FS V5000/icmpping[{$CABIP1},,,,50])=0",
+                                "name": "Ping Down",
+                                "priority": "HIGH"
+                            }
+                        ]
+                    }
+                ],
+                "discovery_rules": [
+                    {
+                        "uuid": "26d591198ac949649c11c68d88439283",
+                        "name": "Discover Drives",
+                        "type": "EXTERNAL",
+                        "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},discoverdrives]",
+                        "delay": "10m",
+                        "lifetime": "1d",
+                        "item_prototypes": [
+                            {
+                                "uuid": "0ac0bdcf9d174be198b0ac616c621b7d",
+                                "name": "Drive Present - Enclosure {#ENCLOSURE_ID}, Drive {#DRIVE_ID}",
+                                "type": "EXTERNAL",
+                                "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getdriveslotstatus,{#ENCLOSURE_ID},{#DRIVE_ID}]",
+                                "trends": "0",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "Disks"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "deab2e8c6f194e4282cd05aad59cfa71",
+                                        "expression": "last(/IBM Storage FS V5000/IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getdriveslotstatus,{#ENCLOSURE_ID},{#DRIVE_ID}],#3)=0",
+                                        "name": "Drive not present - Enclosure {#ENCLOSURE_ID}, Drive {#DRIVE_ID}",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "d22b23aeb5914fcda4a8fdfb8873e578",
+                                "name": "Drive Status - Enclosure {#ENCLOSURE_ID}, Drive {#DRIVE_ID}",
+                                "type": "EXTERNAL",
+                                "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getdrivestatus,{#ENCLOSURE_ID},{#DRIVE_ID}]",
+                                "trends": "0",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "Disks"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "14cda6bebe574e92b080984370e97878",
+                                        "expression": "last(/IBM Storage FS V5000/IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getdrivestatus,{#ENCLOSURE_ID},{#DRIVE_ID}],#3)=0",
+                                        "name": "Drive Failure - Enclosure {#ENCLOSURE_ID}, Drive {#DRIVE_ID}",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "0bd1b5c2b174497382e50d9181ce1985",
+                        "name": "Discover Enclosures",
+                        "type": "EXTERNAL",
+                        "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},discoverenclosures]",
+                        "delay": "10m",
+                        "lifetime": "1d",
+                        "item_prototypes": [
+                            {
+                                "uuid": "8b64710eceae4f6eac38d8ca1f9bba67",
+                                "name": "Battery Status - Enclosure {#ENCLOSURE_ID}, Battery 1",
+                                "type": "EXTERNAL",
+                                "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getbatterystatus,{#ENCLOSURE_ID},1]",
+                                "delay": "45",
+                                "history": "1d",
+                                "trends": "0",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "Batteries"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "3190a57a32a2438aa958c65a8f98e8f5",
+                                        "expression": "last(/IBM Storage FS V5000/IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getbatterystatus,{#ENCLOSURE_ID},1],#3)=0",
+                                        "name": "Battery 1 Failure on Enclosure {#ENCLOSURE_ID}",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "25319d9bee7c4cb6a93d3e5b6adb1a08",
+                                "name": "Battery Status - Enclosure {#ENCLOSURE_ID}, Battery 2",
+                                "type": "EXTERNAL",
+                                "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getbatterystatus,{#ENCLOSURE_ID},2]",
+                                "delay": "45",
+                                "history": "1d",
+                                "trends": "0",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "Batteries"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "8e1ef4436bbd42ec968724de806ff6fb",
+                                        "expression": "last(/IBM Storage FS V5000/IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getbatterystatus,{#ENCLOSURE_ID},2],#3)=0",
+                                        "name": "Battery 2 Failure on Enclosure {#ENCLOSURE_ID}",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "cb5232802f964de59db5645616be0840",
+                                "name": "Enclosure Status - Enclosure {#ENCLOSURE_ID}",
+                                "type": "EXTERNAL",
+                                "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getenclosurestatus,{#ENCLOSURE_ID}]",
+                                "delay": "45",
+                                "history": "1d",
+                                "trends": "0",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "Enclosure"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "d122f7d0eef14a0a9eba5f1452716878",
+                                        "expression": "last(/IBM Storage FS V5000/IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getenclosurestatus,{#ENCLOSURE_ID}],#3)=0",
+                                        "name": "Enclosure Fault on Enclosure {#ENCLOSURE_ID}",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "bf4db2cf3076448784fc5d5b4ff0dc48",
+                                "name": "Canister Status - Enclosure {#ENCLOSURE_ID}, Canister 1",
+                                "type": "EXTERNAL",
+                                "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getnodestatus,{#ENCLOSURE_ID},1]",
+                                "delay": "45",
+                                "history": "1d",
+                                "trends": "0",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "Enclosure"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "3c687d3f88274561be028b1785b94888",
+                                        "expression": "last(/IBM Storage FS V5000/IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getnodestatus,{#ENCLOSURE_ID},1],#3)=0",
+                                        "name": "Canister 1 Failure on Enclosure {#ENCLOSURE_ID}",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "a147a771ca744fa28e9789660d3e64d3",
+                                "name": "Canister Status - Enclosure {#ENCLOSURE_ID}, Canister 2",
+                                "type": "EXTERNAL",
+                                "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getnodestatus,{#ENCLOSURE_ID},2]",
+                                "delay": "45",
+                                "history": "1d",
+                                "trends": "0",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "Enclosure"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "ef08bef7c5fb41278b378ef081ad1f7d",
+                                        "expression": "last(/IBM Storage FS V5000/IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getnodestatus,{#ENCLOSURE_ID},2],#3)=0",
+                                        "name": "Canister 2 Failure on Enclosure {#ENCLOSURE_ID}",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "c9dc01245e3d4a72b74b18adbd4a07a6",
+                                "name": "PSU Status - Enclosure {#ENCLOSURE_ID}, PSU 1",
+                                "type": "EXTERNAL",
+                                "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getpsustatus,{#ENCLOSURE_ID},1]",
+                                "delay": "45",
+                                "history": "1d",
+                                "trends": "0",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PSU"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "8d5c85f4001a4bcca1b8ec7deacfcbd9",
+                                        "expression": "last(/IBM Storage FS V5000/IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getpsustatus,{#ENCLOSURE_ID},1],#3)=0",
+                                        "name": "PSU 1 Failure on Enclosure {#ENCLOSURE_ID}",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "bafdde2166d64b0b8cb56713abd34f67",
+                                "name": "PSU Status - Enclosure {#ENCLOSURE_ID}, PSU 2",
+                                "type": "EXTERNAL",
+                                "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getpsustatus,{#ENCLOSURE_ID},2]",
+                                "delay": "45",
+                                "history": "1d",
+                                "trends": "0",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PSU"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "d51e58700206415481230caf43d1af8e",
+                                        "expression": "last(/IBM Storage FS V5000/IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getpsustatus,{#ENCLOSURE_ID},2],#3)=0",
+                                        "name": "PSU 2 Failure on Enclosure {#ENCLOSURE_ID}",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "1f1ad6b2b752428ab11e7714d7ef8a2b",
+                        "name": "Discover MDiskGroups",
+                        "type": "EXTERNAL",
+                        "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},discovermdiskgroups]",
+                        "delay": "10m",
+                        "lifetime": "1d",
+                        "item_prototypes": [
+                            {
+                                "uuid": "b2ee72a3e0504fc78f63098214d4ed1d",
+                                "name": "MDiskGroup {#MDISK_GROUP_NAME} Space Utilization",
+                                "type": "CALCULATED",
+                                "key": "IBMdisk.used.percent[{$CABIP1},{$CABUSER},{$CABPASS},{#MDISK_GROUP_ID}]",
+                                "value_type": "FLOAT",
+                                "units": "%",
+                                "params": "100-100*last(//IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getmdiskgroupfreecapacity,{#MDISK_GROUP_ID}])/last(//IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getmdiskgroupcapacity,{#MDISK_GROUP_ID}])",
+                                "description": "Space Utilization",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "MDiskGroup"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "8456645e04b3497fa1431a3b66c2c9d3",
+                                        "expression": "last(/IBM Storage FS V5000/IBMdisk.used.percent[{$CABIP1},{$CABUSER},{$CABPASS},{#MDISK_GROUP_ID}],#3)>={$MDISKGROUP_FREE_MIN_CRIT}",
+                                        "name": "MDiskGroup {#ARRAY_NAME}: Disk space is critically low",
+                                        "opdata": "Space used: {ITEM.LASTVALUE3} of {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})",
+                                        "priority": "AVERAGE",
+                                        "description": "MDisk {#ARRAY_NAME}: Disk space is critically low",
+                                        "manual_close": "YES"
+                                    },
+                                    {
+                                        "uuid": "30b69cac39454808955c04b0ecec9844",
+                                        "expression": "last(/IBM Storage FS V5000/IBMdisk.used.percent[{$CABIP1},{$CABUSER},{$CABPASS},{#MDISK_GROUP_ID}],#3)>={$MDISKGROUP_FREE_MIN_WARN}",
+                                        "name": "MDiskGroup {#ARRAY_NAME}: Space is low",
+                                        "opdata": "Space used: {ITEM.LASTVALUE3} of {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})",
+                                        "priority": "WARNING",
+                                        "description": "MDisk {#ARRAY_NAME} Space is low",
+                                        "manual_close": "YES"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "03440b92acf04bf8ba32f70e1d595a86",
+                                "name": "MDiskGroup {#MDISK_GROUP_NAME} Total Space",
+                                "type": "EXTERNAL",
+                                "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getmdiskgroupcapacity,{#MDISK_GROUP_ID}]",
+                                "delay": "4m",
+                                "history": "1d",
+                                "value_type": "FLOAT",
+                                "trends": "0",
+                                "units": "B",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "MDiskGroup"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "02ab1eedfa4d4391b6467799fa17902a",
+                                "name": "MDiskGroup {#MDISK_GROUP_NAME} Total Available",
+                                "type": "EXTERNAL",
+                                "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getmdiskgroupfreecapacity,{#MDISK_GROUP_ID}]",
+                                "history": "1d",
+                                "value_type": "FLOAT",
+                                "trends": "0",
+                                "units": "B",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "MDiskGroup"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "2ef44f22cf654e27aba178ac91e100ef",
+                                "name": "MDiskGroup {#MDISK_GROUP_NAME} Status",
+                                "type": "EXTERNAL",
+                                "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getmdiskgroupstatus,{#MDISK_GROUP_ID}]",
+                                "history": "1d",
+                                "trends": "0",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "MDiskGroup"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "ec505f056b6f4c23ab3997e1ad34585d",
+                                        "expression": "last(/IBM Storage FS V5000/IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getmdiskgroupstatus,{#MDISK_GROUP_ID}],#3)=0",
+                                        "name": "MDiskGroup {#ARRAY_NAME}:  Fault",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "563ae76a9daf41e6947dd9ab9f1a39b0",
+                        "name": "Discover MDisks",
+                        "type": "EXTERNAL",
+                        "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},discovermdisks]",
+                        "delay": "10m",
+                        "lifetime": "1d",
+                        "item_prototypes": [
+                            {
+                                "uuid": "63c4aaece613461fabc60c08f52d2d7a",
+                                "name": "MDisk {#ARRAY_NAME} Status",
+                                "type": "EXTERNAL",
+                                "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getmdiskstatus,{#ARRAY_ID}]",
+                                "history": "1d",
+                                "value_type": "FLOAT",
+                                "trends": "0",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "Array"
+                                    },
+                                    {
+                                        "tag": "Application",
+                                        "value": "MDisk"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "242ced30ce004c2c9de5e6e8cd683e72",
+                                        "expression": "last(/IBM Storage FS V5000/IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getmdiskstatus,{#ARRAY_ID}],#3)=0",
+                                        "name": "MDisk {#ARRAY_NAME} Fault",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "55f913d7c2894cd6b4b9ccc2f1ed452b",
+                        "name": "Discover Volumes",
+                        "type": "EXTERNAL",
+                        "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},discovervolumes]",
+                        "delay": "10m",
+                        "lifetime": "1d",
+                        "item_prototypes": [
+                            {
+                                "uuid": "f7a86a3b0e4d422fb3f715797f956a43",
+                                "name": "Volume {#VDISK_NAME} Status",
+                                "type": "EXTERNAL",
+                                "key": "IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getvolumestatus,{#VDISK_ID}]",
+                                "delay": "2m",
+                                "trends": "0",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "Volumes"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "cccfb8411472423199ff40e724acc19f",
+                                        "expression": "last(/IBM Storage FS V5000/IBMStorageFS5K[{$CABIP1},{$CABUSER},{$CABPASS},getvolumestatus,{#VDISK_ID}],#3)=0",
+                                        "name": "Volume {#VDISK_NAME} Fault",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "macros": [
+                    {
+                        "macro": "{$MDISKGROUP_FREE_MIN_CRIT}",
+                        "value": "95"
+                    },
+                    {
+                        "macro": "{$MDISKGROUP_FREE_MIN_WARN}",
+                        "value": "80"
+                    }
+                ]
+            }
+        ]
+    }
+}
