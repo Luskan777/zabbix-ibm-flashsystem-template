@@ -6,6 +6,13 @@ Adapted from original bash script created by [Yarli](https://github.com/Yarli) t
 
 Supported IBM versions: IBM FS-3500, IBM FS-5000, IBM FS-7000 (needs testing)
 
+### How to use Template:
+
+#### Clone repository and access directory
+`git clone https://github.com/Luskan777/zabbix-ibm-flashsystem-template.git `
+
+`cd zabbix-ibm-flashsystem-template`
+
 #### Build the Golang script:
 
 Build with Go binary (needs Go installed):
@@ -16,7 +23,7 @@ Build with Docker (needs Docker and docker-compose installed):
 
 `docker compose run --rm golang`
 
-How to use Template:
+Configure Template:
  - Copy the script above from source path (`./src/IBMStorageFS5K.go`) to zabbix external script path (`/usr/lib/zabbix/externalscripts/`)
  - Import the template file into your templates section within the Zabbix ui.
  - Create a new user on your storage system which Zabbix can use.
